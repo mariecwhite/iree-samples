@@ -8,33 +8,20 @@ from import_utils import import_torch_module_with_fx
 from models import bert_large, sd_clip_text_model, sd_unet_model, sd_vae_model, resnet50, t5_large, efficientnet_b7, efficientnet_v2_s
 
 _MODEL_NAME_TO_MODEL_CONFIG = {
-    "BERT_LARGE":
-    (bert_large.BertLarge, [1, 8, 16, 32, 64, 128, 256, 512, 1024]),
-    "EFFICIENTNET_B7": (efficientnet_b7.EfficientNetB7, [
-        1,
-    ]),
-    "EFFICIENTNET_V2_S": (efficientnet_v2_s.EfficientNetV2S, [
-        1,
-    ]),
-    "RESNET50": (resnet50.Resnet50, [1, 8, 16, 32, 64, 128, 256, 512, 1024]),
-    "SD_CLIP_TEXT_MODEL_SEQLEN64": (sd_clip_text_model.SDClipTextModel, [
-        1,
-    ]),
-    "SD_VAE_MODEL": (sd_vae_model.SDVaeModel, [
-        1,
-    ]),
-    "SD_UNET_MODEL": (sd_unet_model.SDUnetModel, [
-        1,
-    ]),
-
-    #"T5_LARGE": (t5_large.T5Large, [1, 8, 16, 32, 64, 128, 256, 512, 1024]),
+    #"BERT_LARGE": (bert_large.BertLarge, [1, 8]),
+    #"RESNET50": (resnet50.Resnet50, [1, 8]),
+    "SD_CLIP_TEXT_MODEL_SEQLEN64": (sd_clip_text_model.SDClipTextModel, [1]),
 }
 
 
-def import_to_mlir(model, batch_size):
+def import_to_mlir(model, batch_size, use_fp16):
     inputs = model.generate_inputs(batch_size=batch_size)
+    if use_fp16:
+        #inputs.to(device=torch.device("cuda"), dtype=torch.half)
+        inputs = tuple([x.to(device=torch.device("cuda:0")) for x in inputs])
+        #test_input.
     mlir_data = import_torch_module_with_fx(
-        model, inputs, torch_mlir.OutputType.LINALG_ON_TENSORS)
+        model, inputs, torch_mlir.OutputType.LINALG_ON_TENSORS, use_fp16)
     return (inputs, mlir_data)
 
 
@@ -48,6 +35,7 @@ if __name__ == "__main__":
 
     for model_name, model_config in _MODEL_NAME_TO_MODEL_CONFIG.items():
         print(f"\n\n--- {model_name} -------------------------------------")
+        use_fp16 = True
         model_class = model_config[0]
         batch_sizes = model_config[1]
 
@@ -61,8 +49,24 @@ if __name__ == "__main__":
             try:
                 # Remove all gradient info from models and tensors since these models are inference only.
                 with torch.no_grad():
-                    model = model_class()
-                    inputs, mlir_data = import_to_mlir(model, batch_size)
+                    model_dtype = torch.float16 if use_fp16 else torch.float32
+                    model = model_class(model_dtype=model_dtype)
+
+                    torch.set_default_tensor_type(torch.cuda.FloatTensor)
+                    if use_fp16:
+                        torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = True
+                    else:
+                        torch.backends.cuda.matmul.allow_tf32 = True
+
+                    model.model.to("cuda:0")
+
+                    #if use_fp16:
+                    #    inputs = inputs.to(device=torch.device("cuda"), dtype=torch.half)
+                        #model = model.half()
+                        #model.eval()
+                        #model.to("cuda")
+
+                    inputs, mlir_data = import_to_mlir(model, batch_size, use_fp16)
 
                     # Save inputs.
                     for idx, input in enumerate(inputs):

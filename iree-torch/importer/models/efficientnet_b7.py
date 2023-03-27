@@ -7,8 +7,9 @@ from torchvision.models import efficientnet_b7, EfficientNet_B7_Weights
 # EfficientNetB7 has input image size of 600x600.
 class EfficientNetB7(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float16):
         super().__init__()
+        self.model_dtype = model_dtype
         weights = EfficientNet_B7_Weights.DEFAULT
         self.model = efficientnet_b7(weights=weights)
         self.preprocess = weights.transforms()

@@ -8,12 +8,14 @@ _SEQUENCE_LENGTH = 384
 # Where `max_seq_length` is 384.
 class BertLarge(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float32):
         super().__init__()
-        self.model = BertModel.from_pretrained("bert-large-uncased")
+        self.train(False)
+        self.model_dtype = model_dtype
+        self.model = BertModel.from_pretrained("bert-large-uncased", torch_dtype=self.model_dtype)
 
     def generate_inputs(self, batch_size=1):
-        tokenizer = BertTokenizer.from_pretrained('bert-large-uncased')
+        tokenizer = BertTokenizer.from_pretrained("bert-large-uncased")
         input_text = ["a photo of a cat"] * batch_size
         inputs = tokenizer(text=input_text,
                            padding="max_length",

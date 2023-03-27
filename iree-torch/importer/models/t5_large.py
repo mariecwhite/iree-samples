@@ -7,8 +7,9 @@ _SEQUENCE_LENGTH = 512
 
 class T5Large(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float16):
         super().__init__()
+        self.model_dtype = model_dtype
         self.model = T5Model.from_pretrained("t5-large")
 
     def generate_inputs(self, batch_size=1):

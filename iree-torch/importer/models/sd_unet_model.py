@@ -9,8 +9,9 @@ from models import sd_clip_text_model
 # Usually run over multiple steps until the image is sufficiently de-noised.
 class SDUnetModel(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float16):
         super().__init__()
+        self.model_dtype = model_dtype
         self.model = UNet2DConditionModel.from_pretrained(
             "CompVis/stable-diffusion-v1-4",
             subfolder="unet",

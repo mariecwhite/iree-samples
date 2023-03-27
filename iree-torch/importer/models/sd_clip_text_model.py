@@ -10,12 +10,21 @@ _SEQUENCE_LENGTH = 77
 # Stable Diffusion pipeline.
 class SDClipTextModel(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float32):
         super().__init__()
-        self.model = CLIPTextModel.from_pretrained(
-            "CompVis/stable-diffusion-v1-4",
-            subfolder="text_encoder",
-        )
+        self.model_dtype = model_dtype
+        if self.model_dtype == torch.float16:
+            self.model = CLIPTextModel.from_pretrained(
+                "CompVis/stable-diffusion-v1-4",
+                subfolder="text_encoder",
+                revision="fp16",
+                torch_dtype=torch.float16,
+            )
+        else:
+            self.model = CLIPTextModel.from_pretrained(
+                "CompVis/stable-diffusion-v1-4",
+                subfolder="text_encoder",
+            )
 
     def generate_inputs(self, batch_size=1):
         tokenizer = AutoTokenizer.from_pretrained(

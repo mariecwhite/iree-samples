@@ -22,7 +22,7 @@ source "$VENV_DIR/bin/activate" || die "Could not activate venv"
 # reference to the python executable from the venv.
 python -m pip install --upgrade pip || die "Could not upgrade pip"
 python -m pip install --upgrade -r "$TD/requirements.txt"
-python -m pip install --pre torch-mlir torchvision accelerate -f https://llvm.github.io/torch-mlir/package-index/ -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html
+python -m pip install --pre torch-mlir torchvision accelerate -f https://llvm.github.io/torch-mlir/package-index/ -f https://download.pytorch.org/whl/nightly/cu117/torch_nightly.html
 
 echo "Activate venv with:"
 echo "  source $VENV_DIR/bin/activate"

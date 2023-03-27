@@ -7,8 +7,9 @@ from torchvision.models import efficientnet_v2_s, EfficientNet_V2_S_Weights
 # EfficientNet-V2-Small has input image size of 384x384.
 class EfficientNetV2S(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float16):
         super().__init__()
+        self.model_dtype = model_dtype
         weights = EfficientNet_V2_S_Weights.DEFAULT
         self.model = efficientnet_v2_s(weights=weights)
         self.preprocess = weights.transforms()

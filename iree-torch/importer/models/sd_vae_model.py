@@ -12,8 +12,9 @@ from torchvision import transforms
 # to a higher resolution image using the `VAE` decoder.
 class SDVaeModel(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, model_dtype=torch.float16):
         super().__init__()
+        self.model_dtype = model_dtype
         self.model = AutoencoderKL.from_pretrained(
             "CompVis/stable-diffusion-v1-4", subfolder="vae")
 
