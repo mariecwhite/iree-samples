@@ -88,35 +88,37 @@ def run_framework_benchmark(model_name: str, model_class: Any, batch_size: int,
 
       # Save results.
       result_dict = {
-        "min_warmup_latency_ms":
-           "n/a" if not warmup_latencies else str(min(warmup_latencies)),
-        "max_warmup_latency_ms":
-            "n/a" if not warmup_latencies else str(max(warmup_latencies)),
-        "mean_warmup_latency_ms":
-            "n/a" if not warmup_latencies else str(
-                statistics.mean(warmup_latencies)),
-        "median_warmup_latency_ms":
-            "n/a" if not warmup_latencies else str(
-                statistics.median(warmup_latencies)),
-        "stddev_warmup_latency_ms":
-            "n/a" if not warmup_latencies else str(
-                statistics.stdev(warmup_latencies)),
-        "warmup_iterations":
-            str(warmup_iterations),
-        "min_latency_ms":
-            str(min(latencies)),
-        "max_latency_ms":
-            str(max(latencies)),
-        "mean_latency_ms":
-            str(statistics.mean(latencies)),
-        "median_latency_ms":
-            str(statistics.median(latencies)),
-        "stddev_latency_ms":
-            str(statistics.stdev(latencies)),
-        "benchmark_iterations":
-            str(benchmark_iterations),
-        "compile_time_s": "n/a" if not warmup_latencies else str(compilation_time_s),
-        "input_data_transfer_ms": str(input_data_transfer_ms),
+          "min_warmup_latency_ms":
+              "n/a" if not warmup_latencies else str(min(warmup_latencies)),
+          "max_warmup_latency_ms":
+              "n/a" if not warmup_latencies else str(max(warmup_latencies)),
+          "mean_warmup_latency_ms":
+              "n/a" if not warmup_latencies else str(
+                  statistics.mean(warmup_latencies)),
+          "median_warmup_latency_ms":
+              "n/a" if not warmup_latencies else str(
+                  statistics.median(warmup_latencies)),
+          "stddev_warmup_latency_ms":
+              "n/a" if not warmup_latencies else str(
+                  statistics.stdev(warmup_latencies)),
+          "warmup_iterations":
+              str(warmup_iterations),
+          "min_latency_ms":
+              str(min(latencies)),
+          "max_latency_ms":
+              str(max(latencies)),
+          "mean_latency_ms":
+              str(statistics.mean(latencies)),
+          "median_latency_ms":
+              str(statistics.median(latencies)),
+          "stddev_latency_ms":
+              str(statistics.stdev(latencies)),
+          "benchmark_iterations":
+              str(benchmark_iterations),
+          "compile_time_s":
+              "n/a" if not warmup_latencies else str(compilation_time_s),
+          "input_data_transfer_ms":
+              str(input_data_transfer_ms),
       }
       shared_dict.update(result_dict)
 
