@@ -21,14 +21,14 @@ if [ "${DEVICE}" = "gpu" ]; then
     --action_env LD_LIBRARY_PATH="/usr/local/cuda-${CUDA_VERSION}/lib64:" \
     --action_env CUDA_TOOLKIT_PATH="/usr/local/cuda-${CUDA_VERSION}" \
     --copt=-Wno-switch \
-    xla/tools:run_hlo_module
+    xla/tools/multihost_hlo_runner:hlo_runner_main
 else
   bazel build -c opt --copt=-Wno-switch \
     --action_env GCC_HOST_COMPILER_PATH="/usr/bin/x86_64-linux-gnu-gcc-11" \
-    xla/tools:run_hlo_module
+    xla/tools/multihost_hlo_runner:hlo_runner_main
 fi
 
-RUN_HLO_MODULE_PATH=$(realpath "bazel-bin/xla/tools/run_hlo_module")
+RUN_HLO_MODULE_PATH=$(realpath "bazel-bin/xla/tools/multihost_hlo_runner/hlo_runner_main")
 XLA_SHA=$(git rev-parse --short=8 HEAD)
 
 popd

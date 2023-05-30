@@ -46,12 +46,13 @@ def run_compiler_benchmark(hlo_benchmark_tool_path: str, hlo_input_path: str,
                            benchmark_iterations: int, device: str) -> dict:
   cmd = [
       hlo_benchmark_tool_path,
-      "--input_format=hlo",
-      f"--platform={device}",
-      "--reference_platform=",
+      f"--hlo_file={hlo_input_path}",
+      f"--device_type={device}",
+      f"--num_repeats={benchmark_iterations}",
+      "--input_format=text",
+      "--num_replicas=1",
+      "--num_partitions=1",
       "--logtostderr",
-      f"--input_module={hlo_input_path}",
-      f"--iterations={benchmark_iterations}",
   ]
   result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   result_text = result.stdout.decode("utf-8")
