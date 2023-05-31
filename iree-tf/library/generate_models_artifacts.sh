@@ -8,7 +8,7 @@
 #
 # Requires python-3.10 and above and python-venv.
 
-IREE_OPT_PATH=$1
+#IREE_OPT_PATH=$1
 
 rm -rf tf-models.venv
 bash setup_venv.sh
@@ -39,8 +39,8 @@ for model_dir in ${MODEL_DIRS}; do
         echo "Importing ${SM_DIR}"
         iree-import-tf --output-format=mlir-bytecode --tf-import-type=savedmodel_v2 --tf-savedmodel-exported-names=forward ${SM_DIR} -o "${batch_dir}/stablehlo.mlir"
         # Binarize mlir artifacts.
-        ${IREE_OPT_PATH} --emit-bytecode "${batch_dir}/stablehlo.mlir" -o "${batch_dir}/stablehlo.mlirbc"
-        rm "${batch_dir}/stablehlo.mlir"
+        #${IREE_OPT_PATH} --emit-bytecode "${batch_dir}/stablehlo.mlir" -o "${batch_dir}/stablehlo.mlirbc"
+        #rm "${batch_dir}/stablehlo.mlir"
     done
 done
 
