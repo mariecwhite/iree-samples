@@ -39,13 +39,13 @@ def generate_artifacts(model_name: str, model_class: Any, batch_size: int,
     for idx, input in enumerate(inputs):
       input_path = os.path.join(save_dir, f"input_{idx}.npy")
       print(f"Saving input {jnp.shape(input)} to {input_path}")
-      np.save(input_path, input)
+      jnp.save(input_path, input)
 
     # Save output.
     outputs = jit_function(*jit_inputs)
     output_path = os.path.join(save_dir, f"output_0.npy")
     print(f"Saving output {jnp.shape(outputs)} to {output_path}")
-    np.save(output_path, outputs)
+    jpp.save(output_path, outputs)
 
     # Export.
     mlir = jit_function.lower(*jit_inputs).compiler_ir(dialect="stablehlo")

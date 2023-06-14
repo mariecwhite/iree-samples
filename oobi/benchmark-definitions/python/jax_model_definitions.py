@@ -53,7 +53,7 @@ RESNET50_FP32_JAX_3X224X224XF32_BATCH_TEMPLATE = data_types_builder.ModelTemplat
     name=BATCH_NAME("RESNET50_FP32_JAX_3X224X224XF32"),
     tags=[BATCH_TAG],
     meta_model=RESNET50_FP32_JAX,
-    inputs=input_data_definitions.IMAGENET_APPLES_224X224X3XF32_BATCHES,
+    inputs=input_data_definitions.IMAGENET_APPLES_JAX_3X224X224XF32_BATCHES,
     outputs=jax_output_data_definitions.RESNET50_FP32_JAX_2048X7X7XF32_BATCHES,
     artifacts=[
         data_types_builder.ModelArtifactTemplate(
